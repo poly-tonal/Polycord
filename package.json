@@ -1,0 +1,25 @@
+{
+  "name": "polycord",
+  "version": "1.0.0",
+  "description": "Text to speech discord bot using Amazon Polly for voice generation",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poly-tonal/Polycord.git"
+  },
+  "author": "poly-tonal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/poly-tonal/Polycord/issues"
+  },
+  "homepage": "https://github.com/poly-tonal/Polycord#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
