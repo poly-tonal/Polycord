@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/poly-tonal/Polycord#readme",
   "dependencies": {
+    "@discordjs/voice": "github:discordjs/voice",
     "aws-sdk": "^2.1333.0",
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "path": "^0.12.7"
   }
