@@ -4,7 +4,7 @@ const configPath = "../config.json"
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("Set_TTS_Channel")
+        .setName("set_tts_channel")
         .setDescription("Set Channel Listened to by polycord"),
     async execute(interaction) {
         //set channel in config

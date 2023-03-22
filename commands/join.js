@@ -3,7 +3,7 @@ const { joinVoiceChannel } = require("@discordjs/voice");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("Join")
+        .setName("join")
         .setDescription("Join Voice Channel"),
     async execute(interaction) {
         const voiceChannel = interaction.member.voice.channel;

@@ -5,9 +5,9 @@ const {
 } = require("discord.js");
 const { token, guildId } = require("./config.json");
 const fs = require("fs");
-const aws = require("aws-sdk");
-const polly = new aws.Polly({ region: "eu-west-2" });
-const { getVoiceConnection, createAudioPlayer } = require("@discordjs/voice");
+const { PollyClient, synthesizeSpeechCommand} = require("@aws-sdk/client-polly");
+const polly = new PollyClient({region: "eu-west-2"})
+const { getVoiceConnection, AudioResource, createAudioPlayer } = require("@discordjs/voice");
 const path = require("path")
 const audioPlayer = createAudioPlayer();
 
@@ -81,7 +81,7 @@ client.on("messageCreate", (message) => {
              SampleRate: '8000',
              TextType: 'text'
         };
-        polly.synthesizeSpeech(params, function(err, data) {
+        polly.synthesizeSpeechCommand(params, function(err, data) {
             const voice = createAudioResource(data);
             const connection = getVoiceConnection(message.guild.id);
             audioPlayer.play(voice);
