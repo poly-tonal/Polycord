@@ -1,4 +1,3 @@
-const dotenv = require("dotenv");
 const {
     Client,
     Collection,
@@ -7,8 +6,9 @@ const {
 const { token, guildId } = require("./config.json");
 const fs = require("fs");
 const aws = require("aws-sdk");
-const polly = new aws.Polly({ region: eu-west-2 });
-const { getVoiceConnection } = require("@discordjs/voice");
+const polly = new aws.Polly({ region: "eu-west-2" });
+const { getVoiceConnection, createAudioPlayer } = require("@discordjs/voice");
+const path = require("path")
 const audioPlayer = createAudioPlayer();
 
 // Create a new client instance
@@ -77,18 +77,18 @@ client.on("messageCreate", (message) => {
             OutputFormat: 'mp3',
             Text: ttscontent, 
              // | Ivy | Joanna | Joey | Justin | Kendra | Kimberly | Salli | Conchita | Enrique | Miguel | Penelope | Chantal | Celine | Mathieu | Dora | Karl | Carla | Giorgio | Mizuki | Liv | Lotte | Ruben | Ewa | Jacek | Jan | Maja | Ricardo | Vitoria | Cristiano | Ines | Carmen | Maxim | Tatyana | Astrid | Filiz', /* required */
-             VoiceId: Brian,
+             "VoiceId": "Brian",
 
              SampleRate: '8000',
              TextType: 'text'
         };
         polly.synthesizeSpeech(params, function(err, data) {
             const voice = createAudioResource(data);
+            const connection = getVoiceConnection(message.guild.id);
+            audioPlayer.play(voice);
+            const subscription = connection.subscribe(audioPlayer);
         })
        
-        const connection = getVoiceConnection(message.guild.id);
-        audioPlayer.play(voice);
-        const subscription = connection.subscribe(audioPlayer);
     } else if (
         channel == null &&
         message.author.id != botId &&
