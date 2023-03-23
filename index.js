@@ -40,7 +40,7 @@ for (const file of commandFiles) {
         );
 }
 }
-/*
+
 const eventsPath = path.join(__dirname, "events");
 const eventFiles = fs
     .readdirSync(eventsPath)
@@ -55,7 +55,7 @@ for (const file of eventFiles) {
         client.on(event.name, (...args) => event.execute(...args));
     }
 }
-*/
+
 
 //read all messages
 var { channel } = require("./config.json");
