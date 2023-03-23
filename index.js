@@ -11,7 +11,7 @@ const { getVoiceConnection, AudioResource, createAudioPlayer } = require("@disco
 const path = require("path")
 const audioPlayer = createAudioPlayer();
 
-let botID = 1084213550433697863
+let botId = 1084213550433697863
 
 // Create a new client instance
 const client = new Client({
