@@ -64,6 +64,14 @@ var { channel } = require("./config.json");
 
 client.on("messageCreate", (message) => {
     if (
+        channel == null
+    ) {
+        message.reply({
+            content:
+                "no tts channel set, please set one with /setTTSChannel in the chosen channel",
+        });
+    }
+    else if (
         message.channelId == channel &&
         message.author.id != botId &&
         message.guildId == guildId
@@ -90,15 +98,6 @@ client.on("messageCreate", (message) => {
             const subscription = connection.subscribe(audioPlayer);
         })
        
-    } else if (
-        channel == null &&
-        message.author.id != botId &&
-        message.guildId == guildId
-    ) {
-        message.reply({
-            content:
-                "no tts channel set, please set one with /setTTSChannel in the chosen channel",
-        });
-    }
+    } 
 }),
     client.login(token);
