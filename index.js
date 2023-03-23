@@ -64,7 +64,9 @@ var { channel } = require("./config.json");
 
 client.on("messageCreate", (message) => {
     if (
-        channel == null
+        channel == null &&
+        message.author.id != botId &&
+        message.guildId == guildId
     ) {
         message.reply({
             content:
