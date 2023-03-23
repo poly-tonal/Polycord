@@ -7,7 +7,7 @@ const { token, guildId } = require("./config.json");
 const fs = require("fs");
 const { PollyClient, synthesizeSpeechCommand} = require("@aws-sdk/client-polly");
 const polly = new PollyClient({region: "eu-west-2"})
-const { getVoiceConnection, AudioResource, createAudioPlayer } = require("@discordjs/voice");
+const { getVoiceConnection, VoiceConnectionStatus, AudioResource, createAudioPlayer } = require("@discordjs/voice");
 const path = require("path")
 const audioPlayer = createAudioPlayer();
 
@@ -102,4 +102,12 @@ client.on("messageCreate", (message) => {
        
     } 
 }),
+
+client.on("voiceStateUpdate", async (oldState, newState) => {
+    // Check if the bot has joined a voice channel
+    if (newState.connection && newState.connection.state.status === VoiceConnectionStatus.Ready) {
+      console.log(`Joined voice channel: ${newState.channel.name}!`);
+    }
+  });
+
     client.login(token);
