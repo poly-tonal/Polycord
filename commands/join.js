@@ -9,8 +9,9 @@ module.exports = {
         const voiceChannel = interaction.member.voice.channel;
         if (!voiceChannel)
             await interaction.reply({
-                content: "You need to be in a voice channel to use this command!"
-    });
+                content:
+                    "You need to be in a voice channel to use this command!",
+            });
 
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
