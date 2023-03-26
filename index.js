@@ -86,9 +86,10 @@ client.on("messageCreate", (message) => {
         //get audio from polly
 
         //rewite to open .mp3 (if too slow direct stream)
-        var stream = pollySpeak(message.content);
+        pollySpeak(message.content);
         //open file
-        let voice = createAudioResource(join(__dirname, 'voice.mp3'));
+        let voice = createAudioResource(path.join(__dirname, 'voice.mp3'), { inlineVolume: true });
+        resource.volume.setVolume(1.5);
         const connection = getVoiceConnection(message.guild.id);
         audioPlayer.play(voice);
         const subscription = connection.subscribe(audioPlayer);
