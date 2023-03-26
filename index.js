@@ -62,37 +62,26 @@ for (const file of eventFiles) {
     }
 }
 
-//read all messages
-var { channel } = require("./config.json");
-
 client.on("messageCreate", (message) => {
+    //read all messages
+    var configPath = path.resolve(__dirname, "config.json");
+    var configData = JSON.parse(fs.readFileSync(configPath));
     if (
-        channel == null &&
+        configData.channel == null &&
         message.author.id != botId &&
         message.guildId == guildId
     ) {
         message.reply({
             content:
-                "no tts channel set, please set one with /setTTSChannel in the chosen channel",
+                "no tts channel set, please set one with /set_TTS_Channel in the chosen channel",
         });
     } else if (
-        message.channelId == channel &&
+        message.channelId == configData.channel &&
         message.author.id != botId &&
         message.guildId == guildId
     ) {
         //do tts to it
-
-        //send text to polly
-        //get audio from polly
-
-        //rewite to open .mp3 (if too slow direct stream)
-        pollySpeak(message.content);
-        //open file
-        let voice = createAudioResource(path.join(__dirname, 'voice.mp3'), { inlineVolume: true });
-        resource.volume.setVolume(1.5);
-        const connection = getVoiceConnection(message.guild.id);
-        audioPlayer.play(voice);
-        const subscription = connection.subscribe(audioPlayer);
+        pollySpeak(message);
     }
 }),
     client.on("voiceStateUpdate", async (oldState, newState) => {
@@ -107,7 +96,7 @@ client.on("messageCreate", (message) => {
 
 async function pollySpeak(message) {
     const polly = new PollyClient({ region: "eu-west-2" });
-    var ttscontent = message;
+    var ttscontent = message.content;
     //send message.content to polly
     var params = {
         OutputFormat: "mp3",
@@ -118,29 +107,20 @@ async function pollySpeak(message) {
         SampleRate: "8000",
         TextType: "text",
     };
-    // let speak = polly.SynthesizeSpeechCommand(params);
-    // return await polly.send(speak);
 
-    //fix this
     const command = new SynthesizeSpeechCommand(params);
     try {
         const data = await polly.send(command);
         if (!data || !data.AudioStream) throw Error("Bad Responce");
-        await saveAudio(data.AudioStream, "voice.mp3");
+
+        let voice = createAudioResource(data.AudioStream);
+        const connection = getVoiceConnection(message.guild.id);
+        audioPlayer.play(voice);
+        const subscription = connection.subscribe(audioPlayer);
     } catch (err) {
         console.log(err);
     }
 }
-
-function saveAudio(fromStream, outfile){
-    return new Promise((resolve, reject) => {
-        let toStream = fs.createWriteStream(outfile)
-        toStream.on('finish', resolve);
-        toStream.on('error', reject);
-        fromStream.pipe(toStream)
-    })
-}
-
 
 //log into client
 client.login(token);
