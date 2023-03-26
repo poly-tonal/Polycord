@@ -1,17 +1,21 @@
-const {
-    Client,
-    Collection,
-    GatewayIntentBits,
-} = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { token, guildId } = require("./config.json");
 const fs = require("fs");
-const { PollyClient, synthesizeSpeechCommand} = require("@aws-sdk/client-polly");
-const polly = new PollyClient({region: "eu-west-2"})
-const { getVoiceConnection, VoiceConnectionStatus, AudioResource, createAudioPlayer } = require("@discordjs/voice");
-const path = require("path")
+const {
+    PollyClient,
+    SynthesizeSpeechCommand,
+    synthesizeSpeechInput,
+} = require("@aws-sdk/client-polly");
+const {
+    getVoiceConnection,
+    VoiceConnectionStatus,
+    createAudioResource,
+    createAudioPlayer,
+} = require("@discordjs/voice");
+const path = require("path");
 const audioPlayer = createAudioPlayer();
 
-let botId = 1084213550433697863
+let botId = 1084213550433697863;
 
 // Create a new client instance
 const client = new Client({
@@ -40,7 +44,7 @@ for (const file of commandFiles) {
         console.log(
             `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
         );
-}
+    }
 }
 
 const eventsPath = path.join(__dirname, "events");
@@ -58,7 +62,6 @@ for (const file of eventFiles) {
     }
 }
 
-
 //read all messages
 var { channel } = require("./config.json");
 
@@ -72,8 +75,7 @@ client.on("messageCreate", (message) => {
             content:
                 "no tts channel set, please set one with /setTTSChannel in the chosen channel",
         });
-    }
-    else if (
+    } else if (
         message.channelId == channel &&
         message.author.id != botId &&
         message.guildId == guildId
@@ -82,32 +84,62 @@ client.on("messageCreate", (message) => {
 
         //send text to polly
         //get audio from polly
-        var ttscontent = message.content
-        //send message.content to polly
-        var params = {
-            OutputFormat: 'mp3',
-            Text: ttscontent, 
-             // | Ivy | Joanna | Joey | Justin | Kendra | Kimberly | Salli | Conchita | Enrique | Miguel | Penelope | Chantal | Celine | Mathieu | Dora | Karl | Carla | Giorgio | Mizuki | Liv | Lotte | Ruben | Ewa | Jacek | Jan | Maja | Ricardo | Vitoria | Cristiano | Ines | Carmen | Maxim | Tatyana | Astrid | Filiz', /* required */
-             "VoiceId": "Brian",
 
-             SampleRate: '8000',
-             TextType: 'text'
-        };
-        polly.synthesizeSpeechCommand(params, function(err, data) {
-            const voice = createAudioResource(data);
-            const connection = getVoiceConnection(message.guild.id);
-            audioPlayer.play(voice);
-            const subscription = connection.subscribe(audioPlayer);
-        })
-       
-    } 
-}),
-
-client.on("voiceStateUpdate", async (oldState, newState) => {
-    // Check if the bot has joined a voice channel
-    if (newState.connection && newState.connection.state.status === VoiceConnectionStatus.Ready) {
-      console.log(`Joined voice channel: ${newState.channel.name}!`);
+        //rewite to open .mp3 (if too slow direct stream)
+        var stream = pollySpeak(message.content);
+        //open file
+        let voice = createAudioResource(join(__dirname, 'voice.mp3'));
+        const connection = getVoiceConnection(message.guild.id);
+        audioPlayer.play(voice);
+        const subscription = connection.subscribe(audioPlayer);
     }
-  });
+}),
+    client.on("voiceStateUpdate", async (oldState, newState) => {
+        // Check if the bot has joined a voice channel
+        if (
+            newState.connection &&
+            newState.connection.state.status === VoiceConnectionStatus.Ready
+        ) {
+            console.log(`Joined voice channel: ${newState.channel.name}!`);
+        }
+    });
 
-    client.login(token);
+async function pollySpeak(message) {
+    const polly = new PollyClient({ region: "eu-west-2" });
+    var ttscontent = message;
+    //send message.content to polly
+    var params = {
+        OutputFormat: "mp3",
+        Text: ttscontent,
+        // | Ivy | Joanna | Joey | Justin | Kendra | Kimberly | Salli | Conchita | Enrique | Miguel | Penelope | Chantal | Celine | Mathieu | Dora | Karl | Carla | Giorgio | Mizuki | Liv | Lotte | Ruben | Ewa | Jacek | Jan | Maja | Ricardo | Vitoria | Cristiano | Ines | Carmen | Maxim | Tatyana | Astrid | Filiz', /* required */
+        VoiceId: "Brian",
+
+        SampleRate: "8000",
+        TextType: "text",
+    };
+    // let speak = polly.SynthesizeSpeechCommand(params);
+    // return await polly.send(speak);
+
+    //fix this
+    const command = new SynthesizeSpeechCommand(params);
+    try {
+        const data = await polly.send(command);
+        if (!data || !data.AudioStream) throw Error("Bad Responce");
+        await saveAudio(data.AudioStream, "voice.mp3");
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function saveAudio(fromStream, outfile){
+    return new Promise((resolve, reject) => {
+        let toStream = fs.createWriteStream(outfile)
+        toStream.on('finish', resolve);
+        toStream.on('error', reject);
+        fromStream.pipe(toStream)
+    })
+}
+
+
+//log into client
+client.login(token);
