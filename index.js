@@ -66,15 +66,7 @@ for (const file of eventFiles) {
 
 client.on("messageCreate", (message) => {
     //read all messages
-    const voiceChannel = message.member.voice.channel;
-    if (voiceChannel){
-        const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: message.guildId,
-            adapterCreator: message.guild.voiceAdapterCreator,
-        });}
-
-    var configPath = path.resolve(__dirname, "config.json");
+        var configPath = path.resolve(__dirname, "config.json");
     var configData = JSON.parse(fs.readFileSync(configPath));
     if (
         configData.channel == null &&
@@ -92,6 +84,13 @@ client.on("messageCreate", (message) => {
         message.guildId == guildId &&
         message.member.voice.channel != null
     ) {
+        const voiceChannel = message.member.voice.channel;
+    if (voiceChannel){
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: message.guildId,
+            adapterCreator: message.guild.voiceAdapterCreator,
+        });}
         //do tts to it
         message.guild.members.cache.get(client.user.id).setNickname(`TTS[${message.author.tag}]`)
         pollySpeak(message);
