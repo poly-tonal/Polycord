@@ -78,7 +78,8 @@ client.on("messageCreate", (message) => {
     if (
         configData.channel == null &&
         message.author.id != botId &&
-        message.guildId == guildId
+        message.guildId == guildId &&
+        message.member.voice.channel != null
     ) {
         message.reply({
             content:
@@ -87,10 +88,13 @@ client.on("messageCreate", (message) => {
     } else if (
         message.channelId == configData.channel &&
         message.author.id != botId &&
-        message.guildId == guildId
+        message.guildId == guildId &&
+        message.member.voice.channel != null
     ) {
         //do tts to it
+        message.guild.members.cache.get(client.user.id).setNickname(`TTS[${message.author.tag}]`)
         pollySpeak(message);
+        message.delete()
     }
 }),
     client.on("voiceStateUpdate", async (oldState, newState) => {
@@ -106,14 +110,15 @@ client.on("messageCreate", (message) => {
 async function pollySpeak(message) {
     const polly = new PollyClient({ region: "eu-west-2" });
     var ttscontent = message.content;
+    var configPath = path.resolve(__dirname, "config.json");
+    var configData = JSON.parse(fs.readFileSync(configPath));
+    var voice = configData.voice;
     //send message.content to polly
     var params = {
         OutputFormat: "mp3",
         Text: ttscontent,
-        // | Ivy | Joanna | Joey | Justin | Kendra | Kimberly | Salli | Conchita | Enrique | Miguel | Penelope | Chantal | Celine | Mathieu | Dora | Karl | Carla | Giorgio | Mizuki | Liv | Lotte | Ruben | Ewa | Jacek | Jan | Maja | Ricardo | Vitoria | Cristiano | Ines | Carmen | Maxim | Tatyana | Astrid | Filiz', /* required */
-        VoiceId: "Brian",
-
-        SampleRate: "8000",
+        VoiceId: voice,
+        SampleRate: "16000",
         TextType: "text",
     };
 
