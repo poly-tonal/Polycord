@@ -1,0 +1,7 @@
+{
+    "token": "INSERT_DISCORD_BOT_TOKEN_HERE",
+    "guildId": "INSERT_GUILD_ID_HERE",
+    "channel": "INSERT_CHANNEL_ID_HERE",
+    "botId": "INSERT_BOT_ID_HERE",
+    "voice": "Joey"
+}

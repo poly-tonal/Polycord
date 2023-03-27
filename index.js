@@ -15,8 +15,9 @@ const {
 } = require("@discordjs/voice");
 const path = require("path");
 const audioPlayer = createAudioPlayer();
+const staticconfig = require("./config.json")
 
-let botId = 1084213550433697863;
+let botId = staticconfig.botId
 
 // Create a new client instance
 const client = new Client({
