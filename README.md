@@ -3,7 +3,7 @@ Text to speech discord bot using Amazon Polly for voice generation
 
 # Setup
 - `git clone https://github.com/poly-tonal/Polycord/`
-- cd Polycord
+- `cd Polycord`
 - run `npm i`
 - create `config.json`
 - add required information to config.json following example
