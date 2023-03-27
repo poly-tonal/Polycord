@@ -11,6 +11,7 @@ const {
     VoiceConnectionStatus,
     createAudioResource,
     createAudioPlayer,
+    joinVoiceChannel,
 } = require("@discordjs/voice");
 const path = require("path");
 const audioPlayer = createAudioPlayer();
@@ -64,6 +65,14 @@ for (const file of eventFiles) {
 
 client.on("messageCreate", (message) => {
     //read all messages
+    const voiceChannel = message.member.voice.channel;
+    if (voiceChannel){
+        const connection = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: message.guildId,
+            adapterCreator: message.guild.voiceAdapterCreator,
+        });}
+
     var configPath = path.resolve(__dirname, "config.json");
     var configData = JSON.parse(fs.readFileSync(configPath));
     if (
