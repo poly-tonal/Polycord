@@ -83,7 +83,7 @@ client.on("messageCreate", (message) => {
     ) {
         message.reply({
             content:
-                "no tts channel set, please set one with /set_TTS_Channel in the chosen channel",
+                "no tts channel set, please have an Admin set one with /set_TTS_Channel in the chosen channel",
         });
     } else if (
         message.channelId == configData.channel &&
