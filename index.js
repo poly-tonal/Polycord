@@ -118,7 +118,7 @@ async function pollySpeak(message) {
         OutputFormat: "mp3",
         Text: ttscontent,
         VoiceId: voice,
-        SampleRate: "16000",
+        SampleRate: "24000",
         TextType: "text",
     };
 
