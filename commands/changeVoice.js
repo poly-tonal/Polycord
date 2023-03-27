@@ -38,7 +38,7 @@ module.exports = {
             await interaction.reply(`TTS Voice changed to ${voiceChoice}`);
         }else{
             await interaction.reply(
-                `Unable to change TTS Voice changed to ${voiceChoice}, please check the voice name list and ensure you are using a valid name`
+                `Unable to change TTS Voice changed to ${voiceChoice}, please check the voice name list and ensure you are using a valid standard name`
             );
         }
     },
