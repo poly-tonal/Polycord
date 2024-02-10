@@ -1,7 +1,10 @@
 {
-    "token": "INSERT_DISCORD_BOT_TOKEN_HERE",
-    "guildId": "INSERT_GUILD_ID_HERE",
-    "channel": "INSERT_CHANNEL_ID_HERE",
-    "botId": "INSERT_BOT_ID_HERE",
-    "voice": "Joey"
+    "token": "{DISCORD_API_TOKEN}",
+    "clientId": "{DISCORD_CLIENT_ID}",
+    "guildId": "{DISCORD_SERVER_ID}",
+    "channel": "{DISCORD_CHANNEL_ID}",
+    "botId": "{BOT_ID}",
+    "accessKeyId": "{POLLY_IAM_USER_ACCESS_KEY}", 
+    "secretAccessKey": "{POLLY_IAM_USER_SECRET_ACCESS_KEY}", 
+    "region": "{AWS_REGION_CODE}" 
 }
