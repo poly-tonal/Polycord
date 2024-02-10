@@ -1,28 +1,43 @@
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
-const { accessKeyId, secretAccessKey, region, token, guildId } = require("./config.json");
 const fs = require("fs");
+const path = require("path");
+
+configPath = path.resolve(__dirname, "config.json");
+
+const {
+  accessKeyId,
+  secretAccessKey,
+  region,
+  token,
+  guildId,
+  botId,
+} = require("./config.json");
+
+if (!fs.existsSync(configPath)) {
+  console.log(
+    "script suspended due to no config.json file. Please create config.json file"
+  );
+  while (true) {}
+}
 const {
   PollyClient,
   SynthesizeSpeechCommand,
   synthesizeSpeechInput,
 } = require("@aws-sdk/client-polly");
 
-const AWS = require("aws-sdk")
+const AWS = require("aws-sdk");
 
-const  { fromIni }  = require("@aws-sdk/credential-providers");
-
-
+const { fromIni } = require("@aws-sdk/credential-providers");
 
 const awsPollyCredentials = {
   accessKeyId: accessKeyId,
   secretAccessKey: secretAccessKey,
   region: region,
 };
-  AWS.config.credentials = awsPollyCredentials;
-  AWS.config.region = region;
+AWS.config.credentials = awsPollyCredentials;
+AWS.config.region = region;
 
-
-  const polly = new PollyClient(AWS.config);
+const polly = new PollyClient(AWS.config);
 
 const {
   getVoiceConnection,
@@ -31,12 +46,7 @@ const {
   createAudioPlayer,
   joinVoiceChannel,
 } = require("@discordjs/voice");
-const path = require("path");
 const audioPlayer = createAudioPlayer();
-const staticconfig = require("./config.json");
-// const { PollyClient } = require("@aws-sdk/client-polly");
-
-let botId = staticconfig.botId;
 
 // Create a new client instance
 const client = new Client({
@@ -47,9 +57,6 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
   ],
 });
-
-// AWS.config.loadFromPath(polypath)
-
 
 client.commands = new Collection();
 
@@ -88,7 +95,6 @@ for (const file of eventFiles) {
 
 client.on("messageCreate", (message) => {
   //read all messages
-  var configPath = path.resolve(__dirname, "config.json");
   var configData = JSON.parse(fs.readFileSync(configPath));
   if (
     configData.channel == null &&
@@ -133,14 +139,13 @@ client.on("messageCreate", (message) => {
   });
 
 async function pollySpeak(message) {
-
   var ttscontent = message.content;
 
   userFilePath = path.resolve(__dirname, "userData.json");
 
   if (!fs.existsSync(userFilePath)) {
-    console.log("creating user config file")
-    fs.writeFileSync(userFilePath, '[]');
+    console.log("creating user config file");
+    fs.writeFileSync(userFilePath, "[]");
   }
   userFile = JSON.parse(fs.readFileSync(userFilePath));
   let voice = null;

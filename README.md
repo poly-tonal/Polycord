@@ -15,7 +15,7 @@ Text to speech discord bot using [Amazon Polly](https://aws.amazon.com/polly/) f
 - run Polycord with `node .\index.js`
 - assign a tts channel with the `/set_TTS_channel` as Admin
 
-# commands
+# Commands
 - `/help` get information on how to use the bot, command information available when specified eg `/help /join` will give an explaination of the `/join` command
 - `/join` join current voice channel
 - `/leave` leave voice channel
@@ -26,4 +26,8 @@ Text to speech discord bot using [Amazon Polly](https://aws.amazon.com/polly/) f
 - `/set_TTS_chanel` [admin] set channel command is called in to TTS channel 
 - `/set_other_voice` [admin] set the voice of another user
 
+# Docker Image
+Docker image available for [polycord](https://hub.docker.com/r/polytonal/polycord/tags), installs ffmpeg directly into container. config.json will need to be created and added into the container. Container runs loop without config file to allow for changes to be made in unraid.
+
+`docker pull polytonal/polycord:latest`
 
