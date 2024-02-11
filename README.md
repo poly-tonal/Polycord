@@ -27,7 +27,5 @@ Text to speech discord bot using [Amazon Polly](https://aws.amazon.com/polly/) f
 - `/set_other_voice` [admin] set the voice of another user
 
 # Docker Image
-Docker image available for [polycord](https://hub.docker.com/r/polytonal/polycord/tags), installs ffmpeg directly into container. config.json will need to be created and added into the container. Container runs loop without config file to allow for changes to be made in unraid.
-
-`docker pull polytonal/polycord:latest`
+To run in docker, create `config.json` then run `docker build .` in the polycord directory to create the docker image
 
